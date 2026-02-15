@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WortSchatz Pro - V8</title>
+    <title>WortSchatz Pro - V9</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,12 +13,12 @@
             --box-blue-bg: #EFF6FF; --box-blue-text: #1D4ED8;
             --box-yellow-bg: #FFFBEB; --box-yellow-border: #FCD34D;
             --success: #10B981; --error: #EF4444;
+            --masc: #DBEAFE; --fem: #FCE7F3; --neu: #D1FAE5; --plu: #FEF3C7; /* Gender Colors */
         }
         * { box-sizing: border-box; }
         
         body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--primary); 
+            font-family: 'Inter', sans-serif; background-color: var(--primary); 
             margin: 0; height: 100dvh; width: 100vw; overflow: hidden; 
         }
         
@@ -43,89 +43,73 @@
 
         /* --- STUDY VIEW --- */
         #study-view { flex-direction: row; position: relative; }
-        
         .mobile-menu-btn { display: none; position: absolute; top: 15px; left: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 1.2rem; cursor: pointer; z-index: 150; }
-
         .sidebar { width: 320px; background: var(--bg-white); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         .stats-bar { font-size: 0.85rem; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; }
-        
         .search-box input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
-        
         .vocab-list { flex: 1; overflow-y: auto; padding: 10px; }
-        .list-item { 
-            background: white; border: 1px solid var(--border); border-left: 4px solid var(--secondary); 
-            border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px;
-        }
+        .list-item { background: white; border: 1px solid var(--border); border-left: 4px solid var(--secondary); border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .list-item.active { background: var(--primary); color: white; border-left-color: white; }
         .list-item.active .item-sub { color: #ddd; }
         .item-text { flex: 1; }
         .item-word { font-weight: 700; display: block; }
         .item-sub { font-size: 0.8rem; color: var(--text-muted); }
-        
-        .check-box {
-            width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s;
-        }
+        .check-box { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s; }
         .check-box.checked { background: var(--success); border-color: var(--success); color: white; }
-
         .main-content { flex: 1; background: white; overflow-y: auto; padding: 30px; padding-top: 50px; }
         
-        /* Word Details Styling */
+        /* Word Details */
         .word-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
         .main-word { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
         .tag-pill { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .section-title { font-size: 1.1rem; font-weight: 700; color: #4B5563; margin-bottom: 10px; margin-top: 25px; }
-        
-        /* Info Boxes */
         .box-blue { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 12px; border-radius: 8px; font-weight: 600; border-left: 4px solid var(--secondary); }
-        
-        /* New Example Styling */
         .box-yellow { background: var(--box-yellow-bg); border: 1px solid var(--box-yellow-border); border-radius: 8px; padding: 15px; }
         .ex-de-main { font-size: 1.1rem; font-weight: 700; color: #111; margin-bottom: 4px; }
         .ex-en-main { font-size: 0.95rem; color: #666; font-style: italic; }
-
-        /* Variation Cards Styling */
         .var-grid { display: grid; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
         .var-card { background: var(--box-blue-bg); padding: 15px; border-radius: 10px; border-left: 4px solid var(--secondary); display: flex; flex-direction: column; gap: 8px; }
-        
-        .var-header { display: flex; justify-content: space-between; align-items: center; }
         .var-name { color: var(--box-blue-text); font-weight: 800; font-size: 1.1rem; }
         .var-desc { color: #555; font-size: 0.85rem; font-weight: 500; }
-        
-        .var-example-block { 
-            background: rgba(255,255,255,0.6); 
-            padding: 10px; 
-            border-radius: 6px; 
-            margin-top: 5px; 
-            border: 1px solid rgba(0,0,0,0.05);
-        }
+        .var-example-block { background: rgba(255,255,255,0.6); padding: 10px; border-radius: 6px; margin-top: 5px; border: 1px solid rgba(0,0,0,0.05); }
         .var-de { display: block; font-weight: 700; color: #1f2937; margin-bottom: 4px; font-size: 0.95rem; }
         .var-en { display: block; font-style: italic; color: #6b7280; font-size: 0.85rem; }
 
         /* --- TRAINER VIEW --- */
         #trainer-view { flex-direction: column; align-items: center; padding: 20px; background: var(--bg-body); overflow-y: auto; }
-        .quiz-card {
-            background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; margin-bottom: 40px;
-        }
+        .quiz-card { background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; margin-bottom: 40px; }
         .quiz-context { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: bold; }
         .quiz-question { font-size: 1.4rem; margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
         .quiz-hint { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 8px 12px; border-radius: 8px; margin-bottom: 25px; display: inline-block; font-size: 0.9rem; }
-        
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-btn {
-            padding: 15px; border: 2px solid var(--border); background: white; border-radius: 10px;
-            font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-main);
-            min-height: 60px; display: flex; align-items: center; justify-content: center;
-        }
+        .option-btn { padding: 15px; border: 2px solid var(--border); background: white; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-main); min-height: 60px; display: flex; align-items: center; justify-content: center; }
         .option-btn:hover { border-color: var(--primary); background: var(--box-blue-bg); }
         .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
-
         .feedback-area { margin-top: 20px; min-height: 50px; font-size: 0.95rem; }
         .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: none; width: 100%; }
         .empty-state { text-align: center; color: var(--text-muted); margin-top: 50px; }
+
+        /* --- GRAMMAR VIEW --- */
+        #grammar-view { flex-direction: column; overflow-y: auto; padding: 20px; background: var(--bg-body); }
+        .grammar-container { max-width: 800px; margin: 0 auto; width: 100%; }
+        .grammar-card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .grammar-header { font-size: 1.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        .grammar-sub { font-size: 1.1rem; font-weight: 700; color: #333; margin-top: 15px; margin-bottom: 8px; }
+        .grammar-text { color: #555; line-height: 1.6; margin-bottom: 15px; }
+        
+        /* Tables */
+        .g-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+        .g-table th { background: #f3f4f6; text-align: left; padding: 10px; font-weight: 700; color: #444; border-bottom: 2px solid #ddd; }
+        .g-table td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
+        .g-table tr:last-child td { border-bottom: none; }
+        
+        /* Color Coding */
+        .hl-m { background-color: var(--masc); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #1e3a8a; } /* Masc */
+        .hl-f { background-color: var(--fem); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #831843; } /* Fem */
+        .hl-n { background-color: var(--neu); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #064e3b; } /* Neu */
+        .hl-p { background-color: var(--plu); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #78350f; } /* Plural */
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
@@ -138,6 +122,8 @@
             .main-content { padding: 20px; padding-top: 60px; }
             .options-grid { grid-template-columns: 1fr; }
             .var-grid { grid-template-columns: 1fr; }
+            .g-table { font-size: 0.85rem; }
+            .g-table th, .g-table td { padding: 6px; }
         }
     </style>
 </head>
@@ -147,28 +133,19 @@
     <nav class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('study')">📖 Study List</button>
         <button class="tab-btn" onclick="switchTab('trainer')">💪 Active Trainer</button>
+        <button class="tab-btn" onclick="switchTab('grammar')">🧠 Grammar</button>
     </nav>
 
     <div id="study-view" class="view active">
         <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-        
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="brand">
-                    <span>📖 Vocabulary</span>
-                    <span class="close-btn-sidebar" onclick="toggleSidebar()" style="display:none;">✕</span>
-                </div>
-                <div class="stats-bar">
-                    <span id="learnedCount">0 learned</span>
-                    <span style="cursor:pointer; text-decoration:underline;" onclick="clearProgress()">Reset</span>
-                </div>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()">
-                </div>
+                <div class="brand"><span>📖 Vocabulary</span><span class="close-btn-sidebar" onclick="toggleSidebar()" style="display:none;">✕</span></div>
+                <div class="stats-bar"><span id="learnedCount">0 learned</span><span style="cursor:pointer; text-decoration:underline;" onclick="clearProgress()">Reset</span></div>
+                <div class="search-box"><input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()"></div>
             </div>
             <div class="vocab-list" id="sidebarList"></div>
         </div>
-
         <div class="main-content" id="detailPanel"></div>
     </div>
 
@@ -183,10 +160,63 @@
                 <button class="next-btn" id="nextBtn" onclick="generateQuestion()">Next Word ➝</button>
             </div>
         </div>
-        
         <div id="empty-message" class="empty-state" style="display:none;">
             <h2>Your list is empty!</h2>
             <p>Go to the "Study List" tab and tick (✅) the words you have learned to start the training.</p>
+        </div>
+    </div>
+
+    <div id="grammar-view" class="view">
+        <div class="grammar-container">
+            <div class="grammar-card">
+                <div class="grammar-header">1. The Articles (Der/Die/Das)</div>
+                <div class="grammar-text">German nouns have genders. You must learn the article with the noun.</div>
+                <table class="g-table">
+                    <tr><th>Gender</th><th>Definite</th><th>Indefinite</th></tr>
+                    <tr><td><span class="hl-m">Masculine</span> (Male/Days)</td><td><strong>der</strong> Mann</td><td><strong>ein</strong> Mann</td></tr>
+                    <tr><td><span class="hl-f">Feminine</span> (Female/-ung/-heit)</td><td><strong>die</strong> Frau</td><td><strong>eine</strong> Frau</td></tr>
+                    <tr><td><span class="hl-n">Neutral</span> (Things/-chen)</td><td><strong>das</strong> Kind</td><td><strong>ein</strong> Kind</td></tr>
+                    <tr><td><span class="hl-p">Plural</span> (All)</td><td><strong>die</strong> Kinder</td><td><strong>-</strong> Kinder</td></tr>
+                </table>
+            </div>
+
+            <div class="grammar-card">
+                <div class="grammar-header">2. The 4 Cases (Kasus)</div>
+                <div class="grammar-text">The article changes depending on the role of the noun in the sentence.</div>
+                
+                <div class="grammar-sub">Nominative (The Subject - Who acts?)</div>
+                <div class="grammar-text">The "Standard" form. Used for the person doing the action.</div>
+                <div class="box-blue"><strong>Der Mann</strong> isst den Apfel.</div>
+
+                <div class="grammar-sub">Accusative (The Object - Who is acted upon?)</div>
+                <div class="grammar-text">Used for the direct object. Only <span class="hl-m">Masculine</span> changes!</div>
+                <div class="box-blue">Der Mann isst <strong>den Apfel</strong>. (Der -> Den)</div>
+
+                <div class="grammar-sub">Dative (The Receiver - To whom?)</div>
+                <div class="grammar-text">Used for the receiver or after specific prepositions (mit, bei, von).</div>
+                <div class="box-blue">Ich gebe <strong>dem Mann</strong> ein Buch.</div>
+
+                <table class="g-table">
+                    <tr><th>Case</th><th>Masc (Der)</th><th>Fem (Die)</th><th>Neu (Das)</th><th>Plu (Die)</th></tr>
+                    <tr><td>Nominative</td><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+                    <tr><td>Accusative</td><td><span class="hl-m">den</span></td><td>die</td><td>das</td><td>die</td></tr>
+                    <tr><td>Dative</td><td><span class="hl-m">dem</span></td><td><span class="hl-f">der</span></td><td><span class="hl-n">dem</span></td><td><span class="hl-p">den +n</span></td></tr>
+                </table>
+            </div>
+
+            <div class="grammar-card">
+                <div class="grammar-header">3. Sentence Structure</div>
+                <div class="grammar-sub">Rule 1: Verb is ALWAYS Position 2</div>
+                <div class="grammar-text">In a normal main clause, the conjugated verb stays at position 2. No matter what comes first.</div>
+                <div class="box-yellow">
+                    <div>1. <strong>Ich</strong> <span style="color:red">gehe</span> heute ins Kino.</div>
+                    <div>2. Heute <span style="color:red">gehe</span> <strong>ich</strong> ins Kino.</div>
+                </div>
+
+                <div class="grammar-sub">Rule 2: Verb Kick (Separable)</div>
+                <div class="grammar-text">If a verb has a prefix (e.g. <em>aufstehen</em>), the prefix gets kicked to the end.</div>
+                <div class="box-blue">Ich <strong>stehe</strong> jeden Morgen um 6 Uhr <strong>auf</strong>.</div>
+            </div>
         </div>
     </div>
 </div>
@@ -278,8 +308,12 @@
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tab + '-view').classList.add('active');
-        const btnIndex = tab === 'study' ? 0 : 1;
-        document.getElementsByClassName('tab-btn')[btnIndex].classList.add('active');
+        
+        // Find index manually to support 3 tabs
+        const tabList = ['study', 'trainer', 'grammar'];
+        const btnIndex = tabList.indexOf(tab);
+        if(btnIndex > -1) document.getElementsByClassName('tab-btn')[btnIndex].classList.add('active');
+        
         if(tab === 'trainer') initTrainer();
     }
 
