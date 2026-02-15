@@ -180,21 +180,39 @@
     let currentList = []; // The list currently being shown (filtered or full)
 
     function parseData() {
-        parsedVerbs = rawData.map(line => {
+        // 1. Create a "Set" to track words we have already seen
+        const seenRoots = new Set();
+
+        parsedVerbs = []; // Clear list
+
+        rawData.forEach(line => {
+            // Split the line to find the root word (the first part)
             const parts = line.split(" | ");
+            const rootWord = parts[0].trim().toLowerCase(); // Normalize to lowercase
+
+            // 2. THE BOUNCER CHECK
+            if (seenRoots.has(rootWord)) {
+                console.warn(`Duplicate blocked: ${rootWord}`); // invisible log for developers
+                return; // SKIP this line, do not add it
+            }
+
+            // If new, add to our "Seen" list
+            seenRoots.add(rootWord);
+
+            // Process the data as normal
             const variationsRaw = parts[2].split(" | ");
-            
             const variations = variationsRaw.map(v => {
                 const p = v.split(":");
                 return { type: p[0], word: p[1], meaning: p[2] };
             });
 
-            return {
+            parsedVerbs.push({
                 root: parts[0],
                 english: parts[1],
                 variations: variations
-            };
+            });
         });
+
         currentList = parsedVerbs;
         updateStats();
     }
