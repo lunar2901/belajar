@@ -3,300 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WortSchatz Pro v5.0</title>
+    <title>WortSchatz Pro - 1000 Words</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6B4EFF;
-            --primary-light: #E0D9FF;
-            --secondary: #4A90E2;
-            --bg-body: #F3F4F6;
-            --bg-white: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #6B7280;
-            --border: #E5E7EB;
-            --box-blue-bg: #EFF6FF;
-            --box-blue-text: #1D4ED8;
-            --box-yellow-bg: #FFFBEB;
-            --box-yellow-border: #FCD34D;
+            --primary: #6B4EFF; --primary-light: #E0D9FF; --secondary: #4A90E2;
+            --bg-body: #F3F4F6; --bg-white: #FFFFFF;
+            --text-main: #1F2937; --text-muted: #6B7280; --border: #E5E7EB;
+            --box-blue-bg: #EFF6FF; --box-blue-text: #1D4ED8;
+            --box-yellow-bg: #FFFBEB; --box-yellow-border: #FCD34D;
         }
-
         * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--primary);
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* Responsive Container */
-        .app-window {
-            display: flex;
-            width: 100%;
-            max-width: 1200px;
-            height: 90vh;
-            background: var(--bg-body);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 320px;
-            background: var(--bg-white);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
-            z-index: 100;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-white);
-        }
-
-        .brand {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--primary); margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .app-window { display: flex; width: 100%; max-width: 1200px; height: 90vh; background: var(--bg-body); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 320px; background: var(--bg-white); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); background: var(--bg-white); }
+        .brand { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
         .close-btn { display: none; cursor: pointer; font-size: 1.5rem; }
-
         .search-box { position: relative; }
-        .search-box input {
-            width: 100%;
-            padding: 10px 10px 10px 35px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .search-icon {
-            position: absolute;
-            left: 10px; top: 50%; transform: translateY(-50%);
-            color: #9CA3AF;
-        }
-
+        .search-box input { width: 100%; padding: 10px 10px 10px 35px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
         .vocab-list { flex: 1; overflow-y: auto; padding: 15px; }
-
-        .list-item {
-            background: white;
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--secondary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .list-item { background: white; border: 1px solid var(--border); border-left: 4px solid var(--secondary); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
         .list-item:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .list-item.active { background: var(--primary); border-color: var(--primary); color: white; }
         .list-item.active .item-word { color: white; }
         .list-item.active .item-sub { color: rgba(255,255,255,0.8); }
-
         .item-word { font-weight: 700; font-size: 1rem; color: var(--text-main); display: block; }
         .item-sub { font-size: 0.8rem; color: var(--text-muted); }
 
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            flex: 1;
-            background: white;
-            overflow-y: auto;
-            padding: 40px;
-            position: relative;
-        }
-
-        .mobile-menu-btn {
-            display: none; /* Hidden on desktop */
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 50;
-        }
-
-        /* Content Styling */
-        .word-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 10px;
-            margin-top: 20px; /* Space for mobile menu */
-        }
+        /* MAIN CONTENT */
+        .main-content { flex: 1; background: white; overflow-y: auto; padding: 40px; position: relative; }
+        .mobile-menu-btn { display: none; position: absolute; top: 20px; left: 20px; background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 1.2rem; cursor: pointer; z-index: 50; }
+        .word-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-top: 20px; }
         .main-word { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
         .tag-pill { background: var(--secondary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-
         .section { margin-bottom: 30px; }
         .section-title { font-size: 1.2rem; font-weight: 700; color: #4B5563; margin-bottom: 15px; }
-
         .box-blue { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 15px; border-radius: 8px; font-weight: 600; border-left: 4px solid var(--secondary); }
         .box-yellow { background: var(--box-yellow-bg); border: 1px solid var(--box-yellow-border); border-radius: 8px; padding: 15px; }
-
         .example-line { display: flex; gap: 10px; margin-bottom: 5px; font-style: italic; }
         .lang-tag { font-weight: 800; color: var(--secondary); font-size: 0.8rem; min-width: 25px; }
-
-        /* Variation Cards */
         .var-grid { display: grid; gap: 15px; }
-        .var-card {
-            background: var(--box-blue-bg);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid var(--secondary);
-        }
+        .var-card { background: var(--box-blue-bg); padding: 15px; border-radius: 8px; border-left: 3px solid var(--secondary); }
         .var-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .var-name { color: var(--box-blue-text); font-weight: 700; font-size: 1.1rem; }
         .var-desc { color: #555; font-size: 0.9rem; }
-        .var-example {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            font-size: 0.9rem;
-            font-style: italic;
-            color: #444;
-        }
+        .var-example { margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; font-style: italic; color: #444; }
 
-        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
             body { padding: 0; }
             .app-window { height: 100vh; border-radius: 0; }
-            
-            .sidebar {
-                position: absolute;
-                left: -320px; /* Hide off-screen */
-                height: 100%;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-            }
+            .sidebar { position: absolute; left: -320px; height: 100%; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
             .sidebar.open { transform: translateX(320px); }
-            
             .close-btn { display: block; }
             .mobile-menu-btn { display: block; }
             .main-content { padding: 20px; padding-top: 60px; }
             .word-header { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
-
     </style>
 </head>
 <body>
 
 <div class="app-window">
-    
     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰ Menu</button>
-
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="brand">
-                <span>📖 Vocabulary</span>
-                <span class="close-btn" onclick="toggleSidebar()">✕</span>
-            </div>
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Search words..." onkeyup="filterList()">
-            </div>
+            <div class="brand"><span>📖 Vocabulary</span><span class="close-btn" onclick="toggleSidebar()">✕</span></div>
+            <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()"></div>
         </div>
         <div class="vocab-list" id="sidebarList"></div>
     </div>
-
-    <div class="main-content" id="detailPanel">
-        </div>
-
+    <div class="main-content" id="detailPanel"></div>
 </div>
 
+<script src="words.js"></script>
+
 <script>
-    // =========================================================================
-    // 1. THE DATA ZONE (Paste your 1000 words here)
-    // =========================================================================
-    // Format: Word | Meaning | Conjugation | Usage Note | Ex_DE ~ Ex_EN | Var:Desc:Ex + Var:Desc:Ex
-    
-    const rawData = [
-        "gehen | to go | geht, ging, ist gegangen | General movement from A to B. | Ich gehe zur Schule. ~ I go to school. | ausgehen:to go out:Wir gehen heute aus. + untergehen:to sink:Das Schiff geht unter.",
-        "kommen | to come | kommt, kam, ist gekommen | Movement towards the speaker. | Kommst du mit? ~ Are you coming along? | ankommen:to arrive:Der Zug kommt an. + bekommen:to receive:Ich bekomme ein Geschenk.",
-        "fahren | to drive | fährt, fuhr, ist gefahren | Movement using a vehicle (or public transport). | Ich fahre nach Berlin. ~ I am driving to Berlin. | abfahren:to depart:Der Bus fährt ab. + erfahren:to experience:Ich habe es erfahren.",
-        "sehen | to see | sieht, sah, hat gesehen | Visual perception. | Ich sehe dich. ~ I see you. | aussehen:to look like:Du siehst gut aus. + fernsehen:to watch TV:Wir sehen fern.",
-        "geben | to give | gibt, gab, hat gegeben | Transferring something to someone. | Gib mir das Buch. ~ Give me the book. | aufgeben:to give up:Er gibt nie auf. + vergeben:to forgive:Ich vergebe dir.",
-        "sprechen | to speak | spricht, sprach, hat gesprochen | To articulate words or converse. | Sprichst du Deutsch? ~ Do you speak German? | versprechen:to promise:Ich verspreche es. + besprechen:to discuss:Wir besprechen den Plan.",
-        "nehmen | to take | nimmt, nahm, hat genommen | To grasp or acquire something. | Ich nehme den Bus. ~ I take the bus. | abnehmen:to lose weight:Er hat abgenommen. + zunehmen:to gain weight:Sie hat zugenommen.",
-        "tragen | to carry/wear | trägt, trug, hat getragen | To hold weight or have clothes on. | Er trägt eine Brille. ~ He wears glasses. | ertragen:to endure:Ich kann es nicht ertragen. + vorschlagen:to suggest:Ich schlage vor, wir gehen.",
-        "lassen | to let/leave | lässt, ließ, hat gelassen | To allow or to leave something behind. | Lass mich in Ruhe! ~ Leave me alone! | verlassen:to abandon/leave:Er hat sie verlassen. + zulassen:to allow:Hunde nicht zugelassen."
-    ];
-
-    // =========================================================================
-    // 2. THE ENGINE (Do not touch this part)
-    // =========================================================================
-
+    // --- LOGIC ENGINE ---
     const sidebar = document.getElementById('sidebar');
     const sidebarList = document.getElementById('sidebarList');
     const detailPanel = document.getElementById('detailPanel');
     let vocabData = [];
     let selectedId = 1;
 
-    // PARSER: Converts your text lines into the App's visual format
     function parseData() {
+        // rawData comes from words.js now!
+        if (typeof rawData === 'undefined') {
+            alert("Error: words.js not found! Make sure both files are in the same folder.");
+            return;
+        }
+
         const seen = new Set();
         let idCounter = 1;
-
         vocabData = rawData.map(line => {
             const parts = line.split("|").map(p => p.trim());
-            
-            // Safety Check: If line is broken, skip it
             if(parts.length < 6) return null; 
-
-            // Duplicate Check
             if(seen.has(parts[0])) return null;
             seen.add(parts[0]);
 
-            // Parse Variations (Split by '+' then by ':')
             const vars = parts[5].split("+").map(v => {
                 const vParts = v.split(":").map(s => s.trim());
                 return { word: vParts[0], desc: vParts[1] || "", example: vParts[2] || "" };
             });
-
-            // Parse Example (Split by '~')
             const exParts = parts[4].split("~").map(e => e.trim());
-
             return {
-                id: idCounter++,
-                word: parts[0],
-                meaning: parts[1],
-                conjugation: parts[2],
-                usage_desc: parts[3],
-                examples: [{ de: exParts[0], en: exParts[1] }],
-                variations: vars,
-                type: "Verb"
+                id: idCounter++, word: parts[0], meaning: parts[1], conjugation: parts[2], usage_desc: parts[3],
+                examples: [{ de: exParts[0], en: exParts[1] }], variations: vars, type: "Verb"
             };
-        }).filter(item => item !== null); // Remove failed lines
+        }).filter(item => item !== null);
     }
 
-    // --- RENDER LOGIC (Same as v5) ---
-
     function toggleSidebar() { sidebar.classList.toggle('open'); }
-
     function renderSidebar(filterText = "") {
         sidebarList.innerHTML = "";
         vocabData.forEach(item => {
             if (filterText && !item.word.toLowerCase().includes(filterText.toLowerCase()) && !item.meaning.toLowerCase().includes(filterText.toLowerCase())) return;
-            
             const div = document.createElement('div');
             div.className = `list-item ${item.id === selectedId ? 'active' : ''}`;
             div.onclick = () => { selectWord(item.id); if(window.innerWidth <= 768) toggleSidebar(); };
@@ -304,49 +128,19 @@
             sidebarList.appendChild(div);
         });
     }
-
     function selectWord(id) {
         selectedId = id;
         renderSidebar(document.getElementById('searchInput').value);
-        
         const item = vocabData.find(w => w.id === id);
         if(!item) return;
-
-        // Render Details
-        let examplesHTML = item.examples.map(ex => `
-            <div class="example-line"><span class="lang-tag">DE</span> <span>${ex.de}</span></div>
-            <div class="example-line" style="color:#666; margin-bottom:15px;"><span class="lang-tag">GB</span> <span>${ex.en}</span></div>
-        `).join('');
-
-        let variationsHTML = item.variations.map(v => `
-            <div class="var-card">
-                <div class="var-header"><div class="var-name">${v.word}</div></div>
-                <div class="var-desc">${v.desc}</div>
-                ${v.example ? `<div class="var-example">"${v.example}"</div>` : ''}
-            </div>
-        `).join('');
-
-        detailPanel.innerHTML = `
-            <div class="word-header"><div class="main-word">${item.word}</div><div class="tag-pill">${item.type}</div></div>
-            <div class="section"><div class="section-title">📝 Conjugation</div><div class="box-blue">${item.conjugation}</div></div>
-            <div class="section"><div class="section-title">💡 Meaning & Usage</div>
-                <div style="margin-bottom:10px; color:var(--primary); font-weight:bold;">${item.meaning}</div>
-                <div style="margin-bottom:10px; color:#555;">${item.usage_desc}</div>
-                <div class="box-yellow">${examplesHTML}</div>
-            </div>
-            <div class="section"><div class="section-title">🔄 Variations & Examples</div><div class="var-grid">${variationsHTML}</div></div>
-        `;
+        let examplesHTML = item.examples.map(ex => `<div class="example-line"><span class="lang-tag">DE</span> <span>${ex.de}</span></div><div class="example-line" style="color:#666; margin-bottom:15px;"><span class="lang-tag">GB</span> <span>${ex.en}</span></div>`).join('');
+        let variationsHTML = item.variations.map(v => `<div class="var-card"><div class="var-header"><div class="var-name">${v.word}</div></div><div class="var-desc">${v.desc}</div>${v.example ? `<div class="var-example">"${v.example}"</div>` : ''}</div>`).join('');
+        detailPanel.innerHTML = `<div class="word-header"><div class="main-word">${item.word}</div><div class="tag-pill">${item.type}</div></div><div class="section"><div class="section-title">📝 Conjugation</div><div class="box-blue">${item.conjugation}</div></div><div class="section"><div class="section-title">💡 Meaning & Usage</div><div style="margin-bottom:10px; color:var(--primary); font-weight:bold;">${item.meaning}</div><div style="margin-bottom:10px; color:#555;">${item.usage_desc}</div><div class="box-yellow">${examplesHTML}</div></div><div class="section"><div class="section-title">🔄 Variations & Examples</div><div class="var-grid">${variationsHTML}</div></div>`;
     }
-
     function filterList() { renderSidebar(document.getElementById('searchInput').value); }
-
-    // Init
     parseData();
     renderSidebar();
-    if(vocabData.length > 0) renderDetail(1); // Load first word (wait, renderDetail is merged into selectWord logic now to save space)
-    selectWord(1);
-
+    if(vocabData.length > 0) selectWord(1);
 </script>
-
 </body>
 </html>
