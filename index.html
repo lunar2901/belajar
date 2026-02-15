@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WortSchatz Pro - Trainer</title>
+    <title>WortSchatz Pro - Active Trainer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,40 +19,21 @@
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--primary); 
-            margin: 0; 
-            height: 100dvh; /* Dynamic height for mobile browsers */
-            width: 100vw;
-            overflow: hidden; 
+            margin: 0; height: 100dvh; width: 100vw; overflow: hidden; 
         }
         
-        /* Layout Container */
         .app-container {
-            display: flex; 
-            flex-direction: column; 
-            width: 100%; 
-            max-width: 1200px; 
-            height: 95dvh; 
-            margin: 2.5dvh auto;
-            background: var(--bg-body); 
-            border-radius: 16px; 
-            overflow: hidden; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; width: 100%; max-width: 1200px; 
+            height: 95dvh; margin: 2.5dvh auto; background: var(--bg-body); 
+            border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             position: relative;
         }
 
         /* Tabs */
-        .nav-tabs { 
-            display: flex; 
-            background: white; 
-            border-bottom: 1px solid var(--border); 
-            flex-shrink: 0; /* Prevent tabs from shrinking */
-            z-index: 200;
-        }
+        .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 200; }
         .tab-btn {
-            flex: 1; padding: 15px; border: none; background: none; 
-            font-size: 1rem; font-weight: 600; color: var(--text-muted); 
-            cursor: pointer; transition: 0.3s;
-            border-bottom: 4px solid transparent;
+            flex: 1; padding: 15px; border: none; background: none; font-size: 1rem; font-weight: 600; 
+            color: var(--text-muted); cursor: pointer; transition: 0.3s; border-bottom: 4px solid transparent;
         }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--box-blue-bg); }
 
@@ -63,106 +44,82 @@
         /* --- STUDY VIEW --- */
         #study-view { flex-direction: row; position: relative; }
         
-        .mobile-menu-btn { 
-            display: none; 
-            position: absolute; top: 15px; left: 15px; 
-            background: var(--primary); color: white; border: none; 
-            border-radius: 8px; padding: 8px 12px; font-size: 1.2rem; 
-            cursor: pointer; z-index: 150; 
-        }
+        .mobile-menu-btn { display: none; position: absolute; top: 15px; left: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 1.2rem; cursor: pointer; z-index: 150; }
 
-        .sidebar { 
-            width: 320px; background: var(--bg-white); border-right: 1px solid var(--border); 
-            display: flex; flex-direction: column; 
-            transition: transform 0.3s ease; z-index: 100;
-        }
+        .sidebar { width: 320px; background: var(--bg-white); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .stats-bar { font-size: 0.85rem; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; }
+        
         .search-box input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }
         
         .vocab-list { flex: 1; overflow-y: auto; padding: 10px; }
         .list-item { 
             background: white; border: 1px solid var(--border); border-left: 4px solid var(--secondary); 
-            border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; 
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px;
         }
         .list-item.active { background: var(--primary); color: white; border-left-color: white; }
         .list-item.active .item-sub { color: #ddd; }
+        .item-text { flex: 1; }
         .item-word { font-weight: 700; display: block; }
         .item-sub { font-size: 0.8rem; color: var(--text-muted); }
-
-        .main-content { 
-            flex: 1; background: white; overflow-y: auto; padding: 30px; 
-            padding-top: 50px; /* Space for mobile menu btn */
-        }
         
-        /* Details Styling */
+        /* Checkbox Styling */
+        .check-box {
+            width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s;
+        }
+        .check-box.checked { background: var(--success); border-color: var(--success); color: white; }
+        .check-box:hover { border-color: var(--primary); }
+
+        .main-content { flex: 1; background: white; overflow-y: auto; padding: 30px; padding-top: 50px; }
+        
+        /* Word Details */
         .word-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
         .main-word { font-size: 2rem; font-weight: 800; color: var(--secondary); }
         .tag-pill { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
-        
         .section-title { font-size: 1.1rem; font-weight: 700; color: #4B5563; margin-bottom: 10px; margin-top: 20px; }
         .box-blue { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 12px; border-radius: 8px; font-weight: 600; border-left: 4px solid var(--secondary); }
         .box-yellow { background: var(--box-yellow-bg); border: 1px solid var(--box-yellow-border); border-radius: 8px; padding: 12px; }
-        
         .var-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
         .var-card { background: var(--box-blue-bg); padding: 10px; border-radius: 8px; border-left: 3px solid var(--secondary); }
         .var-name { color: var(--box-blue-text); font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
         .var-desc { color: #555; font-size: 0.85rem; }
-        .var-example { margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; font-style: italic; color: #444; }
 
         /* --- TRAINER VIEW --- */
-        #trainer-view {
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; /* Fix vertical centering cutoff */
-            padding: 20px; 
-            background: var(--bg-body);
-            overflow-y: auto; /* Enable scrolling for trainer */
-        }
+        #trainer-view { flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; background: var(--bg-body); overflow-y: auto; }
         .quiz-card {
             background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;
-            margin-top: 20px; margin-bottom: 40px; /* Space for scrolling */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; margin-bottom: 40px;
         }
         .quiz-context { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: bold; }
-        .quiz-question { font-size: 1.3rem; margin-bottom: 20px; color: var(--text-main); line-height: 1.5; }
-        .quiz-hint { background: var(--box-yellow-bg); color: #854d0e; padding: 8px 12px; border-radius: 8px; margin-bottom: 25px; display: inline-block; font-size: 0.9rem; }
+        .quiz-question { font-size: 1.4rem; margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
+        .quiz-hint { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 8px 12px; border-radius: 8px; margin-bottom: 25px; display: inline-block; font-size: 0.9rem; }
         
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .option-btn {
-            padding: 12px; border: 2px solid var(--border); background: white; border-radius: 10px;
-            font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-main);
-            min-height: 50px;
+            padding: 15px; border: 2px solid var(--border); background: white; border-radius: 10px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-main);
+            min-height: 60px; display: flex; align-items: center; justify-content: center;
         }
         .option-btn:hover { border-color: var(--primary); background: var(--box-blue-bg); }
         .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
 
         .feedback-area { margin-top: 20px; min-height: 50px; font-size: 0.95rem; }
-        .next-btn { 
-            background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; 
-            font-size: 1rem; font-weight: bold; cursor: pointer; display: none; margin-top: 10px; width: 100%;
-        }
+        .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: none; width: 100%; }
 
-        /* --- MOBILE TWEAKS --- */
+        .empty-state { text-align: center; color: var(--text-muted); margin-top: 50px; }
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             .app-container { height: 100dvh; margin: 0; border-radius: 0; }
-            
-            /* Sidebar Logic */
-            .sidebar { 
-                position: absolute; left: -100%; top: 0; height: 100%; width: 80%; 
-                box-shadow: 10px 0 20px rgba(0,0,0,0.2); 
-            }
+            .sidebar { position: absolute; left: -100%; top: 0; height: 100%; width: 85%; box-shadow: 10px 0 20px rgba(0,0,0,0.2); }
             .sidebar.open { left: 0; }
             .mobile-menu-btn { display: block; }
-            .close-btn { display: block; font-size: 1.5rem; cursor: pointer; }
-            .brand { display: flex; justify-content: space-between; }
             .close-btn-sidebar { display: block; cursor: pointer; font-size: 1.5rem; }
-
-            /* Content Adjustment */
+            .brand { display: flex; justify-content: space-between; width: 100%; }
             .main-content { padding: 20px; padding-top: 60px; }
             .options-grid { grid-template-columns: 1fr; }
-            .quiz-card { padding: 20px; margin-top: 10px; }
-            .main-word { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -170,8 +127,8 @@
 
 <div class="app-container">
     <nav class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('study')">📖 Study</button>
-        <button class="tab-btn" onclick="switchTab('trainer')">💪 Trainer</button>
+        <button class="tab-btn active" onclick="switchTab('study')">📖 Study List</button>
+        <button class="tab-btn" onclick="switchTab('trainer')">💪 Active Trainer</button>
     </nav>
 
     <div id="study-view" class="view active">
@@ -182,6 +139,10 @@
                 <div class="brand">
                     <span>📖 Vocabulary</span>
                     <span class="close-btn-sidebar" onclick="toggleSidebar()" style="display:none;">✕</span>
+                </div>
+                <div class="stats-bar">
+                    <span id="learnedCount">0 learned</span>
+                    <span style="cursor:pointer; text-decoration:underline;" onclick="clearProgress()">Reset</span>
                 </div>
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterList()">
@@ -194,17 +155,22 @@
     </div>
 
     <div id="trainer-view" class="view">
-        <div class="quiz-card">
-            <div class="quiz-context" id="q-context">Complete the Sentence</div>
-            <div class="quiz-hint" id="q-hint">Target: ???</div>
+        <div id="quiz-container" class="quiz-card">
+            <div class="quiz-context" id="q-context">Translate to German</div>
             <div class="quiz-question" id="q-text">Loading...</div>
+            <div class="quiz-hint" id="q-hint">Root: ???</div>
             
             <div class="options-grid" id="q-options"></div>
 
             <div class="feedback-area">
                 <div id="q-feedback"></div>
-                <button class="next-btn" id="nextBtn" onclick="generateQuestion()">Next Question ➝</button>
+                <button class="next-btn" id="nextBtn" onclick="generateQuestion()">Next Word ➝</button>
             </div>
+        </div>
+        
+        <div id="empty-message" class="empty-state" style="display:none;">
+            <h2>Your list is empty!</h2>
+            <p>Go to the "Study List" tab and tick (✅) the words you have learned to start the training.</p>
         </div>
     </div>
 </div>
@@ -212,13 +178,22 @@
 <script src="words.js"></script>
 
 <script>
-    // --- APP ENGINE ---
+    // --- APP STATE ---
     let vocabData = [];
     let selectedId = 1;
+    let learnedIds = new Set(); // Stores IDs of checked words
     const sidebar = document.getElementById('sidebar');
 
+    // --- INITIALIZATION ---
     function parseData() {
         if (typeof rawData === 'undefined') return alert("Error: words.js missing!");
+        
+        // Load saved progress
+        const saved = localStorage.getItem('wortschatz_learned');
+        if (saved) {
+            learnedIds = new Set(JSON.parse(saved));
+        }
+
         const seen = new Set();
         let idCounter = 1;
         
@@ -232,11 +207,47 @@
                 return { word: vParts[0], desc: vParts[1] || "", example: vParts[2] || "" };
             });
             const exParts = parts[4].split("~").map(e => e.trim());
+            
+            // Assign ID based on counter
             return {
-                id: idCounter++, word: parts[0], meaning: parts[1], conjugation: parts[2], usage_desc: parts[3],
-                examples: [{ de: exParts[0], en: exParts[1] }], variations: vars, type: "Verb"
+                id: idCounter++, 
+                word: parts[0], 
+                meaning: parts[1], 
+                conjugation: parts[2], 
+                usage_desc: parts[3],
+                examples: [{ de: exParts[0], en: exParts[1] }], 
+                variations: vars, 
+                type: "Verb"
             };
         }).filter(item => item !== null);
+
+        updateStats();
+    }
+
+    // --- STATE MANAGEMENT ---
+    function toggleLearned(id, event) {
+        event.stopPropagation(); // Stop click from opening the word details
+        if (learnedIds.has(id)) {
+            learnedIds.delete(id);
+        } else {
+            learnedIds.add(id);
+        }
+        localStorage.setItem('wortschatz_learned', JSON.stringify([...learnedIds]));
+        updateStats();
+        renderSidebar(document.getElementById('searchInput').value); // Re-render to show check state
+    }
+
+    function clearProgress() {
+        if(confirm("Reset all progress?")) {
+            learnedIds.clear();
+            localStorage.removeItem('wortschatz_learned');
+            updateStats();
+            renderSidebar();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('learnedCount').innerText = `${learnedIds.size} words selected`;
     }
 
     // --- NAVIGATION ---
@@ -248,12 +259,11 @@
         const btnIndex = tab === 'study' ? 0 : 1;
         document.getElementsByClassName('tab-btn')[btnIndex].classList.add('active');
         
-        if(tab === 'trainer') generateQuestion();
+        if(tab === 'trainer') initTrainer();
     }
 
     function toggleSidebar() { 
         sidebar.classList.toggle('open'); 
-        // Show/Hide close button inside sidebar specifically for mobile
         const closeBtn = document.querySelector('.close-btn-sidebar');
         if(window.innerWidth <= 768) closeBtn.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
@@ -264,10 +274,28 @@
         list.innerHTML = "";
         vocabData.forEach(item => {
             if (filterText && !item.word.toLowerCase().includes(filterText.toLowerCase()) && !item.meaning.toLowerCase().includes(filterText.toLowerCase())) return;
+            
+            const isLearned = learnedIds.has(item.id);
             const div = document.createElement('div');
             div.className = `list-item ${item.id === selectedId ? 'active' : ''}`;
-            div.onclick = () => { selectedId = item.id; renderSidebar(document.getElementById('searchInput').value); selectWord(item.id); if(window.innerWidth <= 768) toggleSidebar(); };
-            div.innerHTML = `<span class="item-word">${item.word}</span><span class="item-sub">${item.meaning}</span>`;
+            
+            // Handle row click
+            div.onclick = () => { 
+                selectedId = item.id; 
+                renderSidebar(document.getElementById('searchInput').value); // Re-render to highlight active
+                selectWord(item.id); 
+                if(window.innerWidth <= 768) toggleSidebar(); 
+            };
+
+            div.innerHTML = `
+                <div class="check-box ${isLearned ? 'checked' : ''}" onclick="toggleLearned(${item.id}, event)">
+                    ${isLearned ? '✓' : ''}
+                </div>
+                <div class="item-text">
+                    <span class="item-word">${item.word}</span>
+                    <span class="item-sub">${item.meaning}</span>
+                </div>
+            `;
             list.appendChild(div);
         });
     }
@@ -294,42 +322,61 @@
 
     function filterList() { renderSidebar(document.getElementById('searchInput').value); }
 
-    // --- TRAINER MODE ---
+    // --- TRAINER MODE (ACTIVE RECALL) ---
+    function initTrainer() {
+        if (learnedIds.size === 0) {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('empty-message').style.display = 'block';
+        } else {
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('empty-message').style.display = 'none';
+            generateQuestion();
+        }
+    }
+
     function generateQuestion() {
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('q-feedback').innerHTML = '';
         
-        const randomRoot = vocabData[Math.floor(Math.random() * vocabData.length)];
+        // 1. Filter ONLY learned words
+        const learnedList = vocabData.filter(item => learnedIds.has(item.id));
+        const randomRoot = learnedList[Math.floor(Math.random() * learnedList.length)];
+        
+        // 2. Choose Variation or Root
         const useVariation = Math.random() > 0.3 && randomRoot.variations.length > 0;
         
-        let targetWord, targetMeaning, targetSentence, distractors = [];
+        let targetGerman, targetEnglish;
+        let distractors = [];
 
         if (useVariation) {
             const randomVar = randomRoot.variations[Math.floor(Math.random() * randomRoot.variations.length)];
-            targetWord = randomVar.word; targetMeaning = randomVar.desc; targetSentence = randomVar.example;
-            distractors = randomRoot.variations.filter(v => v.word !== targetWord).map(v => v.word).slice(0, 3);
-            if (distractors.length < 3) distractors.push(randomRoot.word);
+            targetGerman = randomVar.word;
+            targetEnglish = randomVar.desc;
+            
+            // Distractors: other vars from same root OR random learned roots
+            distractors = randomRoot.variations.filter(v => v.word !== targetGerman).map(v => v.word).slice(0, 3);
         } else {
-            targetWord = randomRoot.word; targetMeaning = randomRoot.meaning; targetSentence = randomRoot.examples[0].de;
-            while(distractors.length < 3) {
-                const r = vocabData[Math.floor(Math.random() * vocabData.length)];
-                if(r.word !== targetWord && !distractors.includes(r.word)) distractors.push(r.word);
-            }
+            targetGerman = randomRoot.word;
+            targetEnglish = randomRoot.meaning;
         }
 
-        const regex = new RegExp(targetWord, 'gi');
-        if (!targetSentence.match(regex)) return generateQuestion(); 
+        // Fill remaining distractors from other learned words if needed
+        while(distractors.length < 3) {
+            const r = vocabData[Math.floor(Math.random() * vocabData.length)]; // Can take from unlearned too for difficulty
+            const w = r.variations.length > 0 && Math.random() > 0.5 ? r.variations[0].word : r.word;
+            if(w !== targetGerman && !distractors.includes(w)) distractors.push(w);
+        }
 
-        const blankedSentence = targetSentence.replace(regex, "_____");
-        document.getElementById('q-context').innerText = `Root Family: ${randomRoot.word.toUpperCase()}`;
-        document.getElementById('q-hint').innerText = `Meaning: ${targetMeaning}`;
-        document.getElementById('q-text').innerText = blankedSentence;
+        // 3. UI Update: English -> German
+        document.getElementById('q-context').innerText = "Translate to German";
+        document.getElementById('q-text').innerText = targetEnglish; // Show English Meaning
+        document.getElementById('q-hint').innerText = `Root Family: ${randomRoot.word.toUpperCase()}`; // Hint is the root
 
-        let options = [targetWord, ...distractors].slice(0, 4);
+        let options = [targetGerman, ...distractors].slice(0, 4);
         options.sort(() => Math.random() - 0.5);
 
         document.getElementById('q-options').innerHTML = options.map(opt => 
-            `<button class="option-btn" onclick="checkAnswer(this, '${opt}', '${targetWord}')">${opt}</button>`
+            `<button class="option-btn" onclick="checkAnswer(this, '${opt}', '${targetGerman}')">${opt}</button>`
         ).join('');
     }
 
@@ -341,14 +388,16 @@
         } else {
             btn.classList.add('wrong');
             document.querySelectorAll('.option-btn').forEach(b => { if(b.innerText === correct) b.classList.add('correct'); });
-            document.getElementById('q-feedback').innerHTML = `<span style="color:var(--error); font-weight:bold;">Falsch.</span> Correct was "${correct}".`;
+            document.getElementById('q-feedback').innerHTML = `<span style="color:var(--error); font-weight:bold;">Falsch.</span> The answer was "${correct}".`;
         }
         document.getElementById('nextBtn').style.display = 'block';
     }
 
+    // Start
     parseData();
     renderSidebar();
     selectWord(1);
+
 </script>
 </body>
 </html>
