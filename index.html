@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WortSchatz Pro - Active Trainer</title>
+    <title>WortSchatz Pro - V8</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6B4EFF; --primary-light: #E0D9FF; --secondary: #4A90E2;
             --bg-body: #F3F4F6; --bg-white: #FFFFFF;
-            --text-main: #1F2937; --text-muted: #6B7280; --border: #E5E7EB;
+            --text-main: #111827; --text-muted: #6B7280; --border: #E5E7EB;
             --box-blue-bg: #EFF6FF; --box-blue-text: #1D4ED8;
             --box-yellow-bg: #FFFBEB; --box-yellow-border: #FCD34D;
             --success: #10B981; --error: #EF4444;
@@ -50,7 +50,7 @@
         .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         .stats-bar { font-size: 0.85rem; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; }
         
-        .search-box input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; }
+        .search-box input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; outline: none; }
         
         .vocab-list { flex: 1; overflow-y: auto; padding: 10px; }
         .list-item { 
@@ -63,30 +63,48 @@
         .item-word { font-weight: 700; display: block; }
         .item-sub { font-size: 0.8rem; color: var(--text-muted); }
         
-        /* Checkbox Styling */
         .check-box {
             width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer;
             display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s;
         }
         .check-box.checked { background: var(--success); border-color: var(--success); color: white; }
-        .check-box:hover { border-color: var(--primary); }
 
         .main-content { flex: 1; background: white; overflow-y: auto; padding: 30px; padding-top: 50px; }
         
-        /* Word Details */
+        /* Word Details Styling */
         .word-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
-        .main-word { font-size: 2rem; font-weight: 800; color: var(--secondary); }
-        .tag-pill { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
-        .section-title { font-size: 1.1rem; font-weight: 700; color: #4B5563; margin-bottom: 10px; margin-top: 20px; }
+        .main-word { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
+        .tag-pill { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #4B5563; margin-bottom: 10px; margin-top: 25px; }
+        
+        /* Info Boxes */
         .box-blue { background: var(--box-blue-bg); color: var(--box-blue-text); padding: 12px; border-radius: 8px; font-weight: 600; border-left: 4px solid var(--secondary); }
-        .box-yellow { background: var(--box-yellow-bg); border: 1px solid var(--box-yellow-border); border-radius: 8px; padding: 12px; }
-        .var-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
-        .var-card { background: var(--box-blue-bg); padding: 10px; border-radius: 8px; border-left: 3px solid var(--secondary); }
-        .var-name { color: var(--box-blue-text); font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
-        .var-desc { color: #555; font-size: 0.85rem; }
+        
+        /* New Example Styling */
+        .box-yellow { background: var(--box-yellow-bg); border: 1px solid var(--box-yellow-border); border-radius: 8px; padding: 15px; }
+        .ex-de-main { font-size: 1.1rem; font-weight: 700; color: #111; margin-bottom: 4px; }
+        .ex-en-main { font-size: 0.95rem; color: #666; font-style: italic; }
+
+        /* Variation Cards Styling */
+        .var-grid { display: grid; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+        .var-card { background: var(--box-blue-bg); padding: 15px; border-radius: 10px; border-left: 4px solid var(--secondary); display: flex; flex-direction: column; gap: 8px; }
+        
+        .var-header { display: flex; justify-content: space-between; align-items: center; }
+        .var-name { color: var(--box-blue-text); font-weight: 800; font-size: 1.1rem; }
+        .var-desc { color: #555; font-size: 0.85rem; font-weight: 500; }
+        
+        .var-example-block { 
+            background: rgba(255,255,255,0.6); 
+            padding: 10px; 
+            border-radius: 6px; 
+            margin-top: 5px; 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .var-de { display: block; font-weight: 700; color: #1f2937; margin-bottom: 4px; font-size: 0.95rem; }
+        .var-en { display: block; font-style: italic; color: #6b7280; font-size: 0.85rem; }
 
         /* --- TRAINER VIEW --- */
-        #trainer-view { flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; background: var(--bg-body); overflow-y: auto; }
+        #trainer-view { flex-direction: column; align-items: center; padding: 20px; background: var(--bg-body); overflow-y: auto; }
         .quiz-card {
             background: white; width: 100%; max-width: 600px; padding: 30px; border-radius: 16px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; margin-top: 20px; margin-bottom: 40px;
@@ -107,7 +125,6 @@
 
         .feedback-area { margin-top: 20px; min-height: 50px; font-size: 0.95rem; }
         .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: none; width: 100%; }
-
         .empty-state { text-align: center; color: var(--text-muted); margin-top: 50px; }
 
         /* --- MOBILE --- */
@@ -120,6 +137,7 @@
             .brand { display: flex; justify-content: space-between; width: 100%; }
             .main-content { padding: 20px; padding-top: 60px; }
             .options-grid { grid-template-columns: 1fr; }
+            .var-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -159,9 +177,7 @@
             <div class="quiz-context" id="q-context">Translate to German</div>
             <div class="quiz-question" id="q-text">Loading...</div>
             <div class="quiz-hint" id="q-hint">Root: ???</div>
-            
             <div class="options-grid" id="q-options"></div>
-
             <div class="feedback-area">
                 <div id="q-feedback"></div>
                 <button class="next-btn" id="nextBtn" onclick="generateQuestion()">Next Word ➝</button>
@@ -181,18 +197,14 @@
     // --- APP STATE ---
     let vocabData = [];
     let selectedId = 1;
-    let learnedIds = new Set(); // Stores IDs of checked words
+    let learnedIds = new Set(); 
     const sidebar = document.getElementById('sidebar');
 
-    // --- INITIALIZATION ---
     function parseData() {
         if (typeof rawData === 'undefined') return alert("Error: words.js missing!");
         
-        // Load saved progress
         const saved = localStorage.getItem('wortschatz_learned');
-        if (saved) {
-            learnedIds = new Set(JSON.parse(saved));
-        }
+        if (saved) learnedIds = new Set(JSON.parse(saved));
 
         const seen = new Set();
         let idCounter = 1;
@@ -204,11 +216,27 @@
 
             const vars = parts[5].split("+").map(v => {
                 const vParts = v.split(":").map(s => s.trim());
-                return { word: vParts[0], desc: vParts[1] || "", example: vParts[2] || "" };
+                // Split variation example if possible "German - English"
+                let exRaw = vParts[2] || "";
+                let exDe = exRaw;
+                let exEn = "";
+                
+                if (exRaw.includes(" - ")) {
+                    const splitEx = exRaw.split(" - ");
+                    exDe = splitEx[0];
+                    exEn = splitEx[1];
+                }
+
+                return { 
+                    word: vParts[0], 
+                    desc: vParts[1] || "", 
+                    ex_de: exDe,
+                    ex_en: exEn
+                };
             });
+
             const exParts = parts[4].split("~").map(e => e.trim());
             
-            // Assign ID based on counter
             return {
                 id: idCounter++, 
                 word: parts[0], 
@@ -224,17 +252,13 @@
         updateStats();
     }
 
-    // --- STATE MANAGEMENT ---
     function toggleLearned(id, event) {
-        event.stopPropagation(); // Stop click from opening the word details
-        if (learnedIds.has(id)) {
-            learnedIds.delete(id);
-        } else {
-            learnedIds.add(id);
-        }
+        event.stopPropagation(); 
+        if (learnedIds.has(id)) learnedIds.delete(id);
+        else learnedIds.add(id);
         localStorage.setItem('wortschatz_learned', JSON.stringify([...learnedIds]));
         updateStats();
-        renderSidebar(document.getElementById('searchInput').value); // Re-render to show check state
+        renderSidebar(document.getElementById('searchInput').value); 
     }
 
     function clearProgress() {
@@ -250,15 +274,12 @@
         document.getElementById('learnedCount').innerText = `${learnedIds.size} words selected`;
     }
 
-    // --- NAVIGATION ---
     function switchTab(tab) {
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tab + '-view').classList.add('active');
-        
         const btnIndex = tab === 'study' ? 0 : 1;
         document.getElementsByClassName('tab-btn')[btnIndex].classList.add('active');
-        
         if(tab === 'trainer') initTrainer();
     }
 
@@ -268,34 +289,21 @@
         if(window.innerWidth <= 768) closeBtn.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
     }
 
-    // --- STUDY MODE ---
     function renderSidebar(filterText = "") {
         const list = document.getElementById('sidebarList');
         list.innerHTML = "";
         vocabData.forEach(item => {
             if (filterText && !item.word.toLowerCase().includes(filterText.toLowerCase()) && !item.meaning.toLowerCase().includes(filterText.toLowerCase())) return;
-            
             const isLearned = learnedIds.has(item.id);
             const div = document.createElement('div');
             div.className = `list-item ${item.id === selectedId ? 'active' : ''}`;
-            
-            // Handle row click
             div.onclick = () => { 
                 selectedId = item.id; 
-                renderSidebar(document.getElementById('searchInput').value); // Re-render to highlight active
+                renderSidebar(document.getElementById('searchInput').value); 
                 selectWord(item.id); 
                 if(window.innerWidth <= 768) toggleSidebar(); 
             };
-
-            div.innerHTML = `
-                <div class="check-box ${isLearned ? 'checked' : ''}" onclick="toggleLearned(${item.id}, event)">
-                    ${isLearned ? '✓' : ''}
-                </div>
-                <div class="item-text">
-                    <span class="item-word">${item.word}</span>
-                    <span class="item-sub">${item.meaning}</span>
-                </div>
-            `;
+            div.innerHTML = `<div class="check-box ${isLearned ? 'checked' : ''}" onclick="toggleLearned(${item.id}, event)">${isLearned ? '✓' : ''}</div><div class="item-text"><span class="item-word">${item.word}</span><span class="item-sub">${item.meaning}</span></div>`;
             list.appendChild(div);
         });
     }
@@ -306,23 +314,34 @@
         
         const varsHTML = item.variations.map(v => `
             <div class="var-card">
-                <div class="var-name">${v.word}</div>
+                <div class="var-header">
+                    <div class="var-name">${v.word}</div>
+                </div>
                 <div class="var-desc">${v.desc}</div>
-                ${v.example ? `<div class="var-example">"${v.example}"</div>` : ''}
+                ${v.ex_de ? `
+                <div class="var-example-block">
+                    <span class="var-de">${v.ex_de}</span>
+                    <span class="var-en">${v.ex_en}</span>
+                </div>` : ''}
             </div>`).join('');
             
         document.getElementById('detailPanel').innerHTML = `
             <div class="word-header"><div class="main-word">${item.word}</div><div class="tag-pill">${item.type}</div></div>
             <div class="section"><div class="section-title">📝 Conjugation</div><div class="box-blue">${item.conjugation}</div></div>
             <div class="section"><div class="section-title">💡 Meaning</div><div>${item.meaning}</div><div style="color:#666; margin-top:5px;">${item.usage_desc}</div></div>
-            <div class="section"><div class="box-yellow">DE: ${item.examples[0].de}<br><span style="color:#666">EN: ${item.examples[0].en}</span></div></div>
+            <div class="section">
+                <div class="box-yellow">
+                    <div class="ex-de-main">${item.examples[0].de}</div>
+                    <div class="ex-en-main">${item.examples[0].en}</div>
+                </div>
+            </div>
             <div class="section"><div class="section-title">🔄 Variations</div><div class="var-grid">${varsHTML}</div></div>
         `;
     }
 
     function filterList() { renderSidebar(document.getElementById('searchInput').value); }
 
-    // --- TRAINER MODE (ACTIVE RECALL) ---
+    // --- TRAINER MODE ---
     function initTrainer() {
         if (learnedIds.size === 0) {
             document.getElementById('quiz-container').style.display = 'none';
@@ -338,11 +357,8 @@
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('q-feedback').innerHTML = '';
         
-        // 1. Filter ONLY learned words
         const learnedList = vocabData.filter(item => learnedIds.has(item.id));
         const randomRoot = learnedList[Math.floor(Math.random() * learnedList.length)];
-        
-        // 2. Choose Variation or Root
         const useVariation = Math.random() > 0.3 && randomRoot.variations.length > 0;
         
         let targetGerman, targetEnglish;
@@ -352,25 +368,21 @@
             const randomVar = randomRoot.variations[Math.floor(Math.random() * randomRoot.variations.length)];
             targetGerman = randomVar.word;
             targetEnglish = randomVar.desc;
-            
-            // Distractors: other vars from same root OR random learned roots
             distractors = randomRoot.variations.filter(v => v.word !== targetGerman).map(v => v.word).slice(0, 3);
         } else {
             targetGerman = randomRoot.word;
             targetEnglish = randomRoot.meaning;
         }
 
-        // Fill remaining distractors from other learned words if needed
         while(distractors.length < 3) {
-            const r = vocabData[Math.floor(Math.random() * vocabData.length)]; // Can take from unlearned too for difficulty
+            const r = vocabData[Math.floor(Math.random() * vocabData.length)];
             const w = r.variations.length > 0 && Math.random() > 0.5 ? r.variations[0].word : r.word;
             if(w !== targetGerman && !distractors.includes(w)) distractors.push(w);
         }
 
-        // 3. UI Update: English -> German
         document.getElementById('q-context').innerText = "Translate to German";
-        document.getElementById('q-text').innerText = targetEnglish; // Show English Meaning
-        document.getElementById('q-hint').innerText = `Root Family: ${randomRoot.word.toUpperCase()}`; // Hint is the root
+        document.getElementById('q-text').innerText = targetEnglish; 
+        document.getElementById('q-hint').innerText = `Root Family: ${randomRoot.word.toUpperCase()}`; 
 
         let options = [targetGerman, ...distractors].slice(0, 4);
         options.sort(() => Math.random() - 0.5);
@@ -393,11 +405,9 @@
         document.getElementById('nextBtn').style.display = 'block';
     }
 
-    // Start
     parseData();
     renderSidebar();
     selectWord(1);
-
 </script>
 </body>
 </html>
