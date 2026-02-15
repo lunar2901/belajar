@@ -265,3 +265,60 @@ const batch5 = [
     "siegen | to win | siegt, siegte, hat gesiegt | Victory. | Die Wahrheit siegt immer. ~ Truth always wins. | besiegen:to defeat:Wir haben den Gegner besiegt. - We defeated the opponent. + versiegen:to dry up:Die Quelle ist versiegt. - The spring has dried up.",
     "sehnen | to long | sehnt, sehnte, hat gesehnt | Desire. | Ich sehne mich nach Ruhe. ~ I long for peace. | ersehnen:to desire:Der ersehnte Urlaub ist da. - The longed-for vacation is here."
 ];
+
+// --- PARSE ALL VERB LINES INTO CARD OBJECTS ---
+
+function parseLineToCard(line) {
+  if (!line || typeof line !== "string") return null;
+
+  // separate main parts by " | "
+  const parts = line.split(" | ");
+  if (parts.length < 5) return null;
+
+  const root        = parts[0].trim();  // e.g. "sein"
+  const meaning     = parts[1].trim();  // e.g. "to be"
+  const conjugation = parts[2].trim();  // e.g. "ist, war, ist gewesen"
+  const note        = parts[3].trim();  // usage note
+  const exPair      = parts[4].trim();  // "Er ist ... ~ He is ..."
+
+  // split the example into German and English by "~"
+  let deExample = "";
+  let enExample = "";
+  if (exPair.includes("~")) {
+    const exParts = exPair.split(" ~ ");
+    deExample = exParts[0].trim();
+    enExample = exParts[1].trim();
+  } else {
+    deExample = exPair;
+    enExample = "";
+  }
+
+  // make a simple stable id
+  const shortDe = deExample.slice(0, 20).replace(/\s+/g, "_");
+  const id = (root + "_" + shortDe).toLowerCase();
+
+  return {
+    id: id,
+    root: root,
+    meaning: meaning,
+    conjugation: conjugation,
+    note: note,
+    deExample: deExample,
+    enExample: enExample
+  };
+}
+
+// INCLUDE ALL YOUR BATCHES HERE - add more if needed:
+const allLines = [
+  ...rawData,    // batch 1
+  ...batch2,     // batch 2  
+  ...batch3,     // batch 3
+  ...batch4,     // batch 4
+  ...batch5      // batch 5
+];
+
+// this is the final array you will use in other scripts
+const cards = allLines
+  .map(parseLineToCard)
+  .filter(c => c !== null);
+
