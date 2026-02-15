@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WortSchatz Pro - V9</title>
+    <title>WortSchatz Pro V10 - Grammar Master</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6B4EFF; --primary-light: #E0D9FF; --secondary: #4A90E2;
             --bg-body: #F3F4F6; --bg-white: #FFFFFF;
             --text-main: #111827; --text-muted: #6B7280; --border: #E5E7EB;
-            --box-blue-bg: #EFF6FF; --box-blue-text: #1D4ED8;
+            --box-blue-bg: #EFF6FF; --box-blue-text: #1e3a8a;
             --box-yellow-bg: #FFFBEB; --box-yellow-border: #FCD34D;
             --success: #10B981; --error: #EF4444;
-            --masc: #DBEAFE; --fem: #FCE7F3; --neu: #D1FAE5; --plu: #FEF3C7; /* Gender Colors */
+            
+            /* Grammar Colors */
+            --g-verb: #dc2626; /* Red for Verbs */
+            --g-subj: #2563eb; /* Blue for Subject */
+            --g-conn: #d97706; /* Orange for Connectors */
         }
         * { box-sizing: border-box; }
         
-        body { 
-            font-family: 'Inter', sans-serif; background-color: var(--primary); 
-            margin: 0; height: 100dvh; width: 100vw; overflow: hidden; 
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--primary); margin: 0; height: 100dvh; width: 100vw; overflow: hidden; }
         
         .app-container {
             display: flex; flex-direction: column; width: 100%; max-width: 1200px; 
@@ -29,7 +30,7 @@
             position: relative;
         }
 
-        /* Tabs */
+        /* --- TABS --- */
         .nav-tabs { display: flex; background: white; border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 200; }
         .tab-btn {
             flex: 1; padding: 15px; border: none; background: none; font-size: 1rem; font-weight: 600; 
@@ -37,13 +38,15 @@
         }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--box-blue-bg); }
 
-        /* Views */
+        /* --- VIEWS --- */
         .view { display: none; height: 100%; width: 100%; overflow: hidden; }
         .view.active { display: flex; }
 
-        /* --- STUDY VIEW --- */
+        /* --- STUDY & TRAINER SHARED STYLES --- */
         #study-view { flex-direction: row; position: relative; }
         .mobile-menu-btn { display: none; position: absolute; top: 15px; left: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; padding: 8px 12px; font-size: 1.2rem; cursor: pointer; z-index: 150; }
+        
+        /* Sidebar */
         .sidebar { width: 320px; background: var(--bg-white); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
         .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         .stats-bar { font-size: 0.85rem; color: var(--primary); font-weight: 600; display: flex; justify-content: space-between; }
@@ -57,9 +60,9 @@
         .item-sub { font-size: 0.8rem; color: var(--text-muted); }
         .check-box { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: white; transition: 0.2s; }
         .check-box.checked { background: var(--success); border-color: var(--success); color: white; }
+
+        /* Main Content (Study) */
         .main-content { flex: 1; background: white; overflow-y: auto; padding: 30px; padding-top: 50px; }
-        
-        /* Word Details */
         .word-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-bottom: 20px; }
         .main-word { font-size: 2.5rem; font-weight: 800; color: var(--secondary); }
         .tag-pill { background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
@@ -91,25 +94,35 @@
         .next-btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: none; width: 100%; }
         .empty-state { text-align: center; color: var(--text-muted); margin-top: 50px; }
 
-        /* --- GRAMMAR VIEW --- */
-        #grammar-view { flex-direction: column; overflow-y: auto; padding: 20px; background: var(--bg-body); }
-        .grammar-container { max-width: 800px; margin: 0 auto; width: 100%; }
-        .grammar-card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .grammar-header { font-size: 1.5rem; font-weight: 800; color: var(--secondary); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
-        .grammar-sub { font-size: 1.1rem; font-weight: 700; color: #333; margin-top: 15px; margin-bottom: 8px; }
-        .grammar-text { color: #555; line-height: 1.6; margin-bottom: 15px; }
+        /* --- GRAMMAR VIEW (New & Improved) --- */
+        #grammar-view { flex-direction: row; background: var(--bg-white); }
         
+        .g-sidebar { width: 250px; background: #f9fafb; border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+        .g-menu-title { font-size: 0.85rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 10px; margin-top: 20px; }
+        .g-btn { display: block; width: 100%; text-align: left; padding: 12px 15px; border: none; background: none; font-size: 0.95rem; color: var(--text-main); font-weight: 500; cursor: pointer; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; }
+        .g-btn:hover { background: #e5e7eb; }
+        .g-btn.active { background: var(--primary); color: white; font-weight: 700; }
+
+        .g-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .g-header { font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
+        .g-sub { font-size: 1.1rem; color: #666; margin-bottom: 30px; line-height: 1.5; }
+        
+        .rule-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .rule-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .rule-desc { color: #374151; margin-bottom: 15px; line-height: 1.6; }
+        
+        /* Grammar Syntax Highlighting */
+        .hl-verb { color: var(--g-verb); font-weight: 700; background: #fee2e2; padding: 2px 6px; border-radius: 4px; }
+        .hl-subj { color: var(--g-subj); font-weight: 700; background: #dbeafe; padding: 2px 6px; border-radius: 4px; }
+        .hl-conn { color: var(--g-conn); font-weight: 700; background: #fef3c7; padding: 2px 6px; border-radius: 4px; }
+        
+        .example-box { background: #f8fafc; border-left: 4px solid var(--secondary); padding: 15px; border-radius: 6px; font-family: monospace; font-size: 1rem; color: #333; margin-top: 10px; }
+        .example-trans { color: #6b7280; font-style: italic; margin-top: 5px; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
+
         /* Tables */
         .g-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
-        .g-table th { background: #f3f4f6; text-align: left; padding: 10px; font-weight: 700; color: #444; border-bottom: 2px solid #ddd; }
-        .g-table td { padding: 10px; border-bottom: 1px solid #eee; color: #333; }
-        .g-table tr:last-child td { border-bottom: none; }
-        
-        /* Color Coding */
-        .hl-m { background-color: var(--masc); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #1e3a8a; } /* Masc */
-        .hl-f { background-color: var(--fem); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #831843; } /* Fem */
-        .hl-n { background-color: var(--neu); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #064e3b; } /* Neu */
-        .hl-p { background-color: var(--plu); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #78350f; } /* Plural */
+        .g-table th { background: #f3f4f6; text-align: left; padding: 12px; font-weight: 700; color: #444; border-bottom: 2px solid #ddd; }
+        .g-table td { padding: 12px; border-bottom: 1px solid #eee; color: #333; }
 
         /* --- MOBILE --- */
         @media (max-width: 768px) {
@@ -122,8 +135,14 @@
             .main-content { padding: 20px; padding-top: 60px; }
             .options-grid { grid-template-columns: 1fr; }
             .var-grid { grid-template-columns: 1fr; }
-            .g-table { font-size: 0.85rem; }
-            .g-table th, .g-table td { padding: 6px; }
+            
+            /* Grammar Mobile */
+            #grammar-view { flex-direction: column; }
+            .g-sidebar { width: 100%; height: auto; padding: 15px; border-bottom: 1px solid var(--border); border-right: none; display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
+            .g-menu-title { display: none; }
+            .g-btn { display: inline-block; width: auto; background: #e5e7eb; padding: 8px 15px; border-radius: 20px; margin-bottom: 0; }
+            .g-btn.active { background: var(--primary); }
+            .g-content { padding: 20px; }
         }
     </style>
 </head>
@@ -131,8 +150,8 @@
 
 <div class="app-container">
     <nav class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('study')">📖 Study List</button>
-        <button class="tab-btn" onclick="switchTab('trainer')">💪 Active Trainer</button>
+        <button class="tab-btn active" onclick="switchTab('study')">📖 Study</button>
+        <button class="tab-btn" onclick="switchTab('trainer')">💪 Trainer</button>
         <button class="tab-btn" onclick="switchTab('grammar')">🧠 Grammar</button>
     </nav>
 
@@ -167,64 +186,198 @@
     </div>
 
     <div id="grammar-view" class="view">
-        <div class="grammar-container">
-            <div class="grammar-card">
-                <div class="grammar-header">1. The Articles (Der/Die/Das)</div>
-                <div class="grammar-text">German nouns have genders. You must learn the article with the noun.</div>
-                <table class="g-table">
-                    <tr><th>Gender</th><th>Definite</th><th>Indefinite</th></tr>
-                    <tr><td><span class="hl-m">Masculine</span> (Male/Days)</td><td><strong>der</strong> Mann</td><td><strong>ein</strong> Mann</td></tr>
-                    <tr><td><span class="hl-f">Feminine</span> (Female/-ung/-heit)</td><td><strong>die</strong> Frau</td><td><strong>eine</strong> Frau</td></tr>
-                    <tr><td><span class="hl-n">Neutral</span> (Things/-chen)</td><td><strong>das</strong> Kind</td><td><strong>ein</strong> Kind</td></tr>
-                    <tr><td><span class="hl-p">Plural</span> (All)</td><td><strong>die</strong> Kinder</td><td><strong>-</strong> Kinder</td></tr>
-                </table>
-            </div>
-
-            <div class="grammar-card">
-                <div class="grammar-header">2. The 4 Cases (Kasus)</div>
-                <div class="grammar-text">The article changes depending on the role of the noun in the sentence.</div>
-                
-                <div class="grammar-sub">Nominative (The Subject - Who acts?)</div>
-                <div class="grammar-text">The "Standard" form. Used for the person doing the action.</div>
-                <div class="box-blue"><strong>Der Mann</strong> isst den Apfel.</div>
-
-                <div class="grammar-sub">Accusative (The Object - Who is acted upon?)</div>
-                <div class="grammar-text">Used for the direct object. Only <span class="hl-m">Masculine</span> changes!</div>
-                <div class="box-blue">Der Mann isst <strong>den Apfel</strong>. (Der -> Den)</div>
-
-                <div class="grammar-sub">Dative (The Receiver - To whom?)</div>
-                <div class="grammar-text">Used for the receiver or after specific prepositions (mit, bei, von).</div>
-                <div class="box-blue">Ich gebe <strong>dem Mann</strong> ein Buch.</div>
-
-                <table class="g-table">
-                    <tr><th>Case</th><th>Masc (Der)</th><th>Fem (Die)</th><th>Neu (Das)</th><th>Plu (Die)</th></tr>
-                    <tr><td>Nominative</td><td>der</td><td>die</td><td>das</td><td>die</td></tr>
-                    <tr><td>Accusative</td><td><span class="hl-m">den</span></td><td>die</td><td>das</td><td>die</td></tr>
-                    <tr><td>Dative</td><td><span class="hl-m">dem</span></td><td><span class="hl-f">der</span></td><td><span class="hl-n">dem</span></td><td><span class="hl-p">den +n</span></td></tr>
-                </table>
-            </div>
-
-            <div class="grammar-card">
-                <div class="grammar-header">3. Sentence Structure</div>
-                <div class="grammar-sub">Rule 1: Verb is ALWAYS Position 2</div>
-                <div class="grammar-text">In a normal main clause, the conjugated verb stays at position 2. No matter what comes first.</div>
-                <div class="box-yellow">
-                    <div>1. <strong>Ich</strong> <span style="color:red">gehe</span> heute ins Kino.</div>
-                    <div>2. Heute <span style="color:red">gehe</span> <strong>ich</strong> ins Kino.</div>
-                </div>
-
-                <div class="grammar-sub">Rule 2: Verb Kick (Separable)</div>
-                <div class="grammar-text">If a verb has a prefix (e.g. <em>aufstehen</em>), the prefix gets kicked to the end.</div>
-                <div class="box-blue">Ich <strong>stehe</strong> jeden Morgen um 6 Uhr <strong>auf</strong>.</div>
-            </div>
+        <div class="g-sidebar">
+            <div class="g-menu-title">Basics</div>
+            <button class="g-btn active" onclick="loadGrammar('structure')">Sentence Structure</button>
+            <button class="g-btn" onclick="loadGrammar('connectors')">Connecting Words</button>
+            <div class="g-menu-title">Tenses & Moods</div>
+            <button class="g-btn" onclick="loadGrammar('tenses')">The Past Tenses</button>
+            <button class="g-btn" onclick="loadGrammar('passive')">Passive Voice</button>
+            <button class="g-btn" onclick="loadGrammar('konjunktiv')">Konjunktiv II</button>
+            <button class="g-btn" onclick="loadGrammar('quotes')">Indirect Speech</button>
         </div>
+        <div class="g-content" id="grammar-content">
+            </div>
     </div>
 </div>
 
 <script src="words.js"></script>
 
 <script>
-    // --- APP STATE ---
+    // --- GRAMMAR CONTENT ENGINE ---
+    const grammarData = {
+        structure: `
+            <div class="g-header">Sentence Structure</div>
+            <div class="g-sub">The Golden Rule: The Verb is King.</div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Rule 1: Position 2 (Main Clause)</div>
+                <div class="rule-desc">In a normal sentence, the <span class="hl-verb">conjugated verb</span> is ALWAYS at Position 2. It doesn't matter what is at Position 1.</div>
+                <div class="example-box">
+                    <div>1. <span class="hl-subj">Ich</span> <span class="hl-verb">gehe</span> heute ins Kino.</div>
+                    <div class="example-trans">I go to the cinema today.</div>
+                </div>
+                <div class="example-box">
+                    <div>2. Heute <span class="hl-verb">gehe</span> <span class="hl-subj">ich</span> ins Kino.</div>
+                    <div class="example-trans">Today I go to the cinema. (Verb stays at 2!)</div>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-title">Rule 2: The Bracket (Verb Klammer)</div>
+                <div class="rule-desc">If you have two verb parts (e.g. Perfect Tense, Modal Verbs, Separable Verbs), the second part goes to the very <strong>END</strong>.</div>
+                <div class="example-box">
+                    <div><span class="hl-subj">Ich</span> <span class="hl-verb">habe</span> den Ball <span class="hl-verb">gekauft</span>.</div>
+                    <div class="example-trans">I have bought the ball.</div>
+                </div>
+                <div class="example-box">
+                    <div><span class="hl-subj">Ich</span> <span class="hl-verb">will</span> nach Hause <span class="hl-verb">gehen</span>.</div>
+                    <div class="example-trans">I want to go home.</div>
+                </div>
+            </div>
+        `,
+        connectors: `
+            <div class="g-header">Connecting Words</div>
+            <div class="g-sub">Linking sentences changes the word order. Watch out!</div>
+
+            <div class="rule-card">
+                <div class="rule-title">Type 1: Position 0 (Coordinating)</div>
+                <div class="rule-desc">These words connect two main clauses. They do NOT count as a position. The verb stays at Position 2.</div>
+                <p><strong>und, aber, oder, denn, sondern</strong></p>
+                <div class="example-box">
+                    <div>Ich bin müde, <span class="hl-conn">aber</span> ich <span class="hl-verb">gehe</span> ins Kino.</div>
+                    <div class="example-trans">I am tired, but I go to the cinema.</div>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-title">Type 2: The Kickers (Subordinating)</div>
+                <div class="rule-desc">These words kick the <span class="hl-verb">verb</span> to the very <strong>END</strong> of the sentence.</div>
+                <p><strong>weil, dass, wenn, als, obwohl, damit</strong></p>
+                <div class="example-box">
+                    <div>Ich gehe nicht, <span class="hl-conn">weil</span> ich krank <span class="hl-verb">bin</span>.</div>
+                    <div class="example-trans">I'm not going because I am sick.</div>
+                </div>
+                <div class="example-box">
+                    <div>Er sagt, <span class="hl-conn">dass</span> er keine Zeit <span class="hl-verb">hat</span>.</div>
+                    <div class="example-trans">He says that he has no time.</div>
+                </div>
+            </div>
+        `,
+        tenses: `
+            <div class="g-header">The Past Tenses</div>
+            <div class="g-sub">German mainly uses two forms for the past.</div>
+
+            <div class="rule-card">
+                <div class="rule-title">1. The Perfekt (Spoken Past)</div>
+                <div class="rule-desc">Used in 90% of daily conversation. It needs a helper (haben/sein) + Partizip II at the end.</div>
+                <div class="example-box">
+                    <div>Ich <span class="hl-verb">habe</span> einen Apfel <span class="hl-verb">gegessen</span>.</div>
+                    <div class="example-trans">I ate an apple.</div>
+                </div>
+                <div class="example-box">
+                    <div>Er <span class="hl-verb">ist</span> nach Hause <span class="hl-verb">gegangen</span>.</div>
+                    <div class="example-trans">He went home. (Motion verbs use 'sein')</div>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-title">2. The Präteritum (Written Past)</div>
+                <div class="rule-desc">Used in books, newspapers, and formal reports. Also commonly used for: <em>sein (war), haben (hatte), werden (wurde)</em>, and Modal verbs.</div>
+                <div class="example-box">
+                    <div>Es <span class="hl-verb">war</span> einmal ein König.</div>
+                    <div class="example-trans">Once upon a time there was a king.</div>
+                </div>
+                <div class="example-box">
+                    <div>Ich <span class="hl-verb">konnte</span> nicht kommen.</div>
+                    <div class="example-trans">I could not come. (Modal)</div>
+                </div>
+            </div>
+        `,
+        passive: `
+            <div class="g-header">Passive Voice</div>
+            <div class="g-sub">Focus on the action, not the person.</div>
+
+            <div class="rule-card">
+                <div class="rule-title">How to build it</div>
+                <div class="rule-desc"><strong>werden</strong> + <strong>Partizip II</strong> (at the end).</div>
+                <div class="example-box">
+                    <div>Das Auto <span class="hl-verb">wird</span> repariert.</div>
+                    <div class="example-trans">The car is being repaired. (Present)</div>
+                </div>
+                <div class="example-box">
+                    <div>Das Auto <span class="hl-verb">wurde</span> repariert.</div>
+                    <div class="example-trans">The car was repaired. (Past - Präteritum)</div>
+                </div>
+                <div class="example-box">
+                    <div>Das Auto <span class="hl-verb">ist</span> repariert <span class="hl-verb">worden</span>.</div>
+                    <div class="example-trans">The car has been repaired. (Past - Perfekt)</div>
+                </div>
+            </div>
+        `,
+        konjunktiv: `
+            <div class="g-header">Konjunktiv II (Imagination)</div>
+            <div class="g-sub">Used for wishes, politeness, and "What if...".</div>
+
+            <div class="rule-card">
+                <div class="rule-title">1. Würde + Infinitive (Standard)</div>
+                <div class="rule-desc">Used for almost all verbs.</div>
+                <div class="example-box">
+                    <div>Ich <span class="hl-verb">würde</span> gerne ein Auto <span class="hl-verb">kaufen</span>.</div>
+                    <div class="example-trans">I would like to buy a car.</div>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-title">2. Hätte / Wäre (The Essentials)</div>
+                <div class="rule-desc">For 'haben' and 'sein', we use the direct forms.</div>
+                <div class="example-box">
+                    <div>Ich <span class="hl-verb">hätte</span> gerne ein Bier.</div>
+                    <div class="example-trans">I would have (like) a beer. (Polite)</div>
+                </div>
+                <div class="example-box">
+                    <div>Wenn ich reich <span class="hl-verb">wäre</span>, ...</div>
+                    <div class="example-trans">If I were rich...</div>
+                </div>
+            </div>
+        `,
+        quotes: `
+            <div class="g-header">Indirect Speech (Quotation)</div>
+            <div class="g-sub">Reporting what someone else said.</div>
+
+            <div class="rule-card">
+                <div class="rule-title">Konjunktiv I</div>
+                <div class="rule-desc">Used in news and formal reports to stay neutral. Often formed by adding -e to the verb stem.</div>
+                <div class="example-box">
+                    <div>Er sagt, er <span class="hl-verb">habe</span> keine Zeit.</div>
+                    <div class="example-trans">He says he has no time.</div>
+                </div>
+                <div class="example-box">
+                    <div>Die Polizei berichtet, der Täter <span class="hl-verb">sei</span> geflohen.</div>
+                    <div class="example-trans">The police report the perpetrator has fled.</div>
+                </div>
+            </div>
+            
+            <div class="rule-card">
+                <div class="rule-title">Daily Life Alternative</div>
+                <div class="rule-desc">In normal conversation, Germans just use the normal Indikativ or Konjunktiv II.</div>
+                <div class="example-box">
+                    <div>Er sagt, dass er keine Zeit <span class="hl-verb">hat</span>.</div>
+                    <div class="example-trans">He says that he has no time. (Normal)</div>
+                </div>
+            </div>
+        `
+    };
+
+    function loadGrammar(topic) {
+        document.getElementById('grammar-content').innerHTML = grammarData[topic];
+        document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('active'));
+        // Find button by onclick text content comparison or just highlighting logic
+        event.target.classList.add('active');
+    }
+
+    // --- MAIN APP LOGIC (Recycled from V8) ---
+    // (This part ensures the Study/Trainer tabs still work perfectly)
     let vocabData = [];
     let selectedId = 1;
     let learnedIds = new Set(); 
@@ -232,89 +385,50 @@
 
     function parseData() {
         if (typeof rawData === 'undefined') return alert("Error: words.js missing!");
-        
         const saved = localStorage.getItem('wortschatz_learned');
         if (saved) learnedIds = new Set(JSON.parse(saved));
-
         const seen = new Set();
         let idCounter = 1;
-        
         vocabData = rawData.map(line => {
             const parts = line.split("|").map(p => p.trim());
             if(parts.length < 6 || seen.has(parts[0])) return null;
             seen.add(parts[0]);
-
             const vars = parts[5].split("+").map(v => {
                 const vParts = v.split(":").map(s => s.trim());
-                // Split variation example if possible "German - English"
                 let exRaw = vParts[2] || "";
-                let exDe = exRaw;
-                let exEn = "";
-                
-                if (exRaw.includes(" - ")) {
-                    const splitEx = exRaw.split(" - ");
-                    exDe = splitEx[0];
-                    exEn = splitEx[1];
-                }
-
-                return { 
-                    word: vParts[0], 
-                    desc: vParts[1] || "", 
-                    ex_de: exDe,
-                    ex_en: exEn
-                };
+                let exDe = exRaw; let exEn = "";
+                if (exRaw.includes(" - ")) { const splitEx = exRaw.split(" - "); exDe = splitEx[0]; exEn = splitEx[1]; }
+                return { word: vParts[0], desc: vParts[1] || "", ex_de: exDe, ex_en: exEn };
             });
-
             const exParts = parts[4].split("~").map(e => e.trim());
-            
             return {
-                id: idCounter++, 
-                word: parts[0], 
-                meaning: parts[1], 
-                conjugation: parts[2], 
-                usage_desc: parts[3],
-                examples: [{ de: exParts[0], en: exParts[1] }], 
-                variations: vars, 
-                type: "Verb"
+                id: idCounter++, word: parts[0], meaning: parts[1], conjugation: parts[2], usage_desc: parts[3],
+                examples: [{ de: exParts[0], en: exParts[1] }], variations: vars, type: "Verb"
             };
         }).filter(item => item !== null);
-
         updateStats();
     }
 
     function toggleLearned(id, event) {
         event.stopPropagation(); 
-        if (learnedIds.has(id)) learnedIds.delete(id);
-        else learnedIds.add(id);
+        if (learnedIds.has(id)) learnedIds.delete(id); else learnedIds.add(id);
         localStorage.setItem('wortschatz_learned', JSON.stringify([...learnedIds]));
         updateStats();
         renderSidebar(document.getElementById('searchInput').value); 
     }
 
-    function clearProgress() {
-        if(confirm("Reset all progress?")) {
-            learnedIds.clear();
-            localStorage.removeItem('wortschatz_learned');
-            updateStats();
-            renderSidebar();
-        }
-    }
-
-    function updateStats() {
-        document.getElementById('learnedCount').innerText = `${learnedIds.size} words selected`;
-    }
+    function clearProgress() { if(confirm("Reset progress?")) { learnedIds.clear(); localStorage.removeItem('wortschatz_learned'); updateStats(); renderSidebar(); } }
+    function updateStats() { document.getElementById('learnedCount').innerText = `${learnedIds.size} words selected`; }
 
     function switchTab(tab) {
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tab + '-view').classList.add('active');
-        
-        // Find index manually to support 3 tabs
         const tabList = ['study', 'trainer', 'grammar'];
         const btnIndex = tabList.indexOf(tab);
         if(btnIndex > -1) document.getElementsByClassName('tab-btn')[btnIndex].classList.add('active');
-        
         if(tab === 'trainer') initTrainer();
+        if(tab === 'grammar' && document.getElementById('grammar-content').innerHTML.trim() === "") loadGrammar('structure');
     }
 
     function toggleSidebar() { 
@@ -331,12 +445,7 @@
             const isLearned = learnedIds.has(item.id);
             const div = document.createElement('div');
             div.className = `list-item ${item.id === selectedId ? 'active' : ''}`;
-            div.onclick = () => { 
-                selectedId = item.id; 
-                renderSidebar(document.getElementById('searchInput').value); 
-                selectWord(item.id); 
-                if(window.innerWidth <= 768) toggleSidebar(); 
-            };
+            div.onclick = () => { selectedId = item.id; renderSidebar(document.getElementById('searchInput').value); selectWord(item.id); if(window.innerWidth <= 768) toggleSidebar(); };
             div.innerHTML = `<div class="check-box ${isLearned ? 'checked' : ''}" onclick="toggleLearned(${item.id}, event)">${isLearned ? '✓' : ''}</div><div class="item-text"><span class="item-word">${item.word}</span><span class="item-sub">${item.meaning}</span></div>`;
             list.appendChild(div);
         });
@@ -345,37 +454,22 @@
     function selectWord(id) {
         const item = vocabData.find(w => w.id === id);
         if(!item) return;
-        
         const varsHTML = item.variations.map(v => `
             <div class="var-card">
-                <div class="var-header">
-                    <div class="var-name">${v.word}</div>
-                </div>
+                <div class="var-header"><div class="var-name">${v.word}</div></div>
                 <div class="var-desc">${v.desc}</div>
-                ${v.ex_de ? `
-                <div class="var-example-block">
-                    <span class="var-de">${v.ex_de}</span>
-                    <span class="var-en">${v.ex_en}</span>
-                </div>` : ''}
+                ${v.ex_de ? `<div class="var-example-block"><span class="var-de">${v.ex_de}</span><span class="var-en">${v.ex_en}</span></div>` : ''}
             </div>`).join('');
-            
         document.getElementById('detailPanel').innerHTML = `
             <div class="word-header"><div class="main-word">${item.word}</div><div class="tag-pill">${item.type}</div></div>
             <div class="section"><div class="section-title">📝 Conjugation</div><div class="box-blue">${item.conjugation}</div></div>
             <div class="section"><div class="section-title">💡 Meaning</div><div>${item.meaning}</div><div style="color:#666; margin-top:5px;">${item.usage_desc}</div></div>
-            <div class="section">
-                <div class="box-yellow">
-                    <div class="ex-de-main">${item.examples[0].de}</div>
-                    <div class="ex-en-main">${item.examples[0].en}</div>
-                </div>
-            </div>
-            <div class="section"><div class="section-title">🔄 Variations</div><div class="var-grid">${varsHTML}</div></div>
-        `;
+            <div class="section"><div class="box-yellow"><div class="ex-de-main">${item.examples[0].de}</div><div class="ex-en-main">${item.examples[0].en}</div></div></div>
+            <div class="section"><div class="section-title">🔄 Variations</div><div class="var-grid">${varsHTML}</div></div>`;
     }
 
     function filterList() { renderSidebar(document.getElementById('searchInput').value); }
 
-    // --- TRAINER MODE ---
     function initTrainer() {
         if (learnedIds.size === 0) {
             document.getElementById('quiz-container').style.display = 'none';
@@ -390,40 +484,29 @@
     function generateQuestion() {
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('q-feedback').innerHTML = '';
-        
         const learnedList = vocabData.filter(item => learnedIds.has(item.id));
         const randomRoot = learnedList[Math.floor(Math.random() * learnedList.length)];
         const useVariation = Math.random() > 0.3 && randomRoot.variations.length > 0;
-        
-        let targetGerman, targetEnglish;
-        let distractors = [];
+        let targetGerman, targetEnglish, distractors = [];
 
         if (useVariation) {
             const randomVar = randomRoot.variations[Math.floor(Math.random() * randomRoot.variations.length)];
-            targetGerman = randomVar.word;
-            targetEnglish = randomVar.desc;
+            targetGerman = randomVar.word; targetEnglish = randomVar.desc;
             distractors = randomRoot.variations.filter(v => v.word !== targetGerman).map(v => v.word).slice(0, 3);
         } else {
-            targetGerman = randomRoot.word;
-            targetEnglish = randomRoot.meaning;
+            targetGerman = randomRoot.word; targetEnglish = randomRoot.meaning;
         }
-
         while(distractors.length < 3) {
             const r = vocabData[Math.floor(Math.random() * vocabData.length)];
             const w = r.variations.length > 0 && Math.random() > 0.5 ? r.variations[0].word : r.word;
             if(w !== targetGerman && !distractors.includes(w)) distractors.push(w);
         }
-
         document.getElementById('q-context').innerText = "Translate to German";
         document.getElementById('q-text').innerText = targetEnglish; 
         document.getElementById('q-hint').innerText = `Root Family: ${randomRoot.word.toUpperCase()}`; 
-
         let options = [targetGerman, ...distractors].slice(0, 4);
         options.sort(() => Math.random() - 0.5);
-
-        document.getElementById('q-options').innerHTML = options.map(opt => 
-            `<button class="option-btn" onclick="checkAnswer(this, '${opt}', '${targetGerman}')">${opt}</button>`
-        ).join('');
+        document.getElementById('q-options').innerHTML = options.map(opt => `<button class="option-btn" onclick="checkAnswer(this, '${opt}', '${targetGerman}')">${opt}</button>`).join('');
     }
 
     function checkAnswer(btn, selection, correct) {
@@ -439,9 +522,11 @@
         document.getElementById('nextBtn').style.display = 'block';
     }
 
+    // Init
     parseData();
     renderSidebar();
     selectWord(1);
+    // Auto-load first grammar page if refreshed on grammar tab (optional, defaults to study)
 </script>
 </body>
 </html>
